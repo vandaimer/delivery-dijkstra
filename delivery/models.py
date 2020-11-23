@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Float
 from sqlalchemy.orm import validates
 
 from db import BaseSQLAlchemy
@@ -9,6 +9,7 @@ class Route(BaseSQLAlchemy):
     map = Column(String, nullable=False)
     origin = Column(String, nullable=False)
     destination = Column(String, nullable=False)
+    distance = Column(Float, nullable=False)
 
     @validates('map', 'origin', 'destination')
     def validate_empty_fields(self, key, value):
