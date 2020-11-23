@@ -1,0 +1,23 @@
+version: '3.3'
+
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: "admin"
+      POSTGRES_DB: "delivery"
+
+  dev:
+    build: .
+    command: uvicorn main:app --host 0.0.0.0 --reload
+    environment:
+      DB_HOST: db
+      DB_NAME: "delivery"
+      DB_PASSWORD: "admin"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
