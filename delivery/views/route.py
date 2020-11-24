@@ -42,7 +42,7 @@ class Route:
             destination,
         )
 
-        cost = self.calculate_expenses(
+        cost = Route.calculate_expenses(
             data['gas_price'],
             data['truck_autonomy'],
             shortest_distance,
@@ -84,7 +84,8 @@ class Route:
         if routes == 0:
             raise ValueError('This map does not exists.')
 
-    def calculate_expenses(self, gas_price, truck_autonomy, distance):
+    @staticmethod
+    def calculate_expenses(gas_price, truck_autonomy, distance):
         return (distance/truck_autonomy) * gas_price
 
     def validate_input(self, route):
