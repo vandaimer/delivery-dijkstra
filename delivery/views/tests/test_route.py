@@ -141,3 +141,23 @@ class TestRoute:
         result = Route.calculate_expenses(gas_price, truck_autonomy, distance)
 
         assert result == expected
+
+    def test_validate_cheapest_input(self, mocker):
+        session = AlchemyMagicMock()
+        route = Route(session)
+
+        spy_map = mocker.spy(route, 'validate_map')
+        spy_origin = mocker.spy(route, 'validate_origin')
+        spy_destination = mocker.spy(route, 'validate_destination')
+
+        mocker.patch('delivery.views.route.Route.validate_map')
+        mocker.patch('delivery.views.route.Route.validate_origin')
+        mocker.patch('delivery.views.route.Route.validate_destination')
+
+        route.validate_cheapest_input(self.mock_data)
+
+        map = self.mock_data['map']
+
+        spy_map.assert_called_once_with(map)
+        spy_origin.assert_called_once_with(map, self.mock_data['origin'])
+        spy_destination.assert_called_once_with(map, self.mock_data['destination'])
