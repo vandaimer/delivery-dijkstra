@@ -21,7 +21,10 @@ class Route:
     def cheapest(self, data):
         self.validate_cheapest_input(data)
 
-        routes = self.db.query(RouteModel).filter(RouteModel.map == data['map']).all()
+        routes = self.db.query(RouteModel).filter(
+            RouteModel.map == data['map']
+        ).all()
+
         routes = [
             (route.origin, route.destination, route.distance)
             for route in routes
@@ -79,7 +82,9 @@ class Route:
             raise ValueError('This origin on this map does not exists.')
 
     def validate_map(self, map):
-        routes = self.db.query(RouteModel.id).filter(RouteModel.map == map).count()
+        routes = self.db.query(RouteModel.id).filter(
+            RouteModel.map == map
+        ).count()
 
         if routes == 0:
             raise ValueError('This map does not exists.')

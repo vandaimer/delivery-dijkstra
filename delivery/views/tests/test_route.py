@@ -43,13 +43,13 @@ class TestRoute:
         session = UnifiedAlchemyMagicMock(data=[
             (
                 [mock.call.query(RouteModel.id),
-                 mock.call.filter(RouteModel.map == self.mock_data['map']),],
+                 mock.call.filter(RouteModel.map == self.mock_data['map'])],
                 [expected]
             ),
         ])
 
         route = Route(session)
-        result = route.validate_map(self.mock_data['map'])
+        route.validate_map(self.mock_data['map'])
 
         session.query.return_value.filter.\
             assert_called_once_with(RouteModel.map == self.mock_data['map'])
@@ -74,7 +74,10 @@ class TestRoute:
         session = UnifiedAlchemyMagicMock(data=[
             (
                 [mock.call.query(RouteModel.id),
-                 mock.call.filter(RouteModel.map == self.mock_data['map'], RouteModel.origin == self.mock_data['origin']),],
+                 mock.call.filter(
+                     RouteModel.map == self.mock_data['map'],
+                     RouteModel.origin == self.mock_data['origin'])
+                 ],
                 [expected],
             ),
         ])
@@ -83,53 +86,78 @@ class TestRoute:
         route.validate_origin(self.mock_data['map'], self.mock_data['origin'])
 
         session.query.return_value.filter.\
-            assert_called_once_with(RouteModel.map == self.mock_data['map'], RouteModel.origin == self.mock_data['origin'])
+            assert_called_once_with(
+                RouteModel.map == self.mock_data['map'],
+                RouteModel.origin == self.mock_data['origin']
+            )
 
     def test_validate_origin_exception(self):
         expected = []
         session = UnifiedAlchemyMagicMock(data=[
             (
                 [mock.call.query(RouteModel.id),
-                 mock.call.filter(RouteModel.map == self.mock_data['map'], RouteModel.origin == self.mock_data['origin']),],
+                 mock.call.filter(
+                     RouteModel.map == self.mock_data['map'],
+                     RouteModel.origin == self.mock_data['origin'])
+                 ],
                 expected,
             ),
         ])
 
         route = Route(session)
 
-        with pytest.raises(ValueError, match='This origin on this map does not exists.'):
-            route.validate_origin(self.mock_data['map'], self.mock_data['origin'])
+        msg = 'This origin on this map does not exists.'
+        with pytest.raises(ValueError, match=msg):
+            route.validate_origin(
+                self.mock_data['map'],
+                self.mock_data['origin'],
+            )
 
     def test_validate_destination(self):
         expected = 10
         session = UnifiedAlchemyMagicMock(data=[
             (
                 [mock.call.query(RouteModel.id),
-                 mock.call.filter(RouteModel.map == self.mock_data['map'], RouteModel.destination == self.mock_data['destination']),],
+                 mock.call.filter(
+                     RouteModel.map == self.mock_data['map'],
+                     RouteModel.destination == self.mock_data['destination'])
+                 ],
                 [expected],
             ),
         ])
 
         route = Route(session)
-        route.validate_destination(self.mock_data['map'], self.mock_data['destination'])
+        route.validate_destination(
+            self.mock_data['map'],
+            self.mock_data['destination'],
+        )
 
         session.query.return_value.filter.\
-            assert_called_once_with(RouteModel.map == self.mock_data['map'], RouteModel.destination == self.mock_data['destination'])
+            assert_called_once_with(
+                RouteModel.map == self.mock_data['map'],
+                RouteModel.destination == self.mock_data['destination'],
+            )
 
     def test_validate_destination_exception(self):
         expected = []
         session = UnifiedAlchemyMagicMock(data=[
             (
                 [mock.call.query(RouteModel.id),
-                 mock.call.filter(RouteModel.map == self.mock_data['map'], RouteModel.destination == self.mock_data['destination']),],
+                 mock.call.filter(
+                     RouteModel.map == self.mock_data['map'],
+                     RouteModel.destination == self.mock_data['destination'])
+                 ],
                 expected,
             ),
         ])
 
         route = Route(session)
 
-        with pytest.raises(ValueError, match='This destination on this map does not exists.'):
-            route.validate_destination(self.mock_data['map'], self.mock_data['destination'])
+        msg = 'This destination on this map does not exists.'
+        with pytest.raises(ValueError, match=msg):
+            route.validate_destination(
+                self.mock_data['map'], self.mock_data['destination']
+            )
 
     def test_calculate_cost(self):
         gas_price = 1
@@ -160,7 +188,9 @@ class TestRoute:
 
         spy_map.assert_called_once_with(map)
         spy_origin.assert_called_once_with(map, self.mock_data['origin'])
-        spy_destination.assert_called_once_with(map, self.mock_data['destination'])
+        spy_destination.assert_called_once_with(
+            map, self.mock_data['destination']
+        )
 
     def test_cheapest(self, mocker):
         mocker.patch('delivery.views.route.Route.validate_cheapest_input')
@@ -175,7 +205,7 @@ class TestRoute:
         session = UnifiedAlchemyMagicMock(data=[
             (
                 [mock.call.query(RouteModel),
-                 mock.call.filter(RouteModel.map == self.mock_data['map']),],
+                 mock.call.filter(RouteModel.map == self.mock_data['map'])],
                 [expected]
             ),
         ])

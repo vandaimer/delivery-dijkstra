@@ -34,9 +34,16 @@ class TestDeliverGraph:
 
         self.graph.populate_graph(self.mock)
 
-        shortest_path = self.graph.shortest_path(self.first_element, third_element)
+        shortest_path = self.graph.shortest_path(
+            self.first_element,
+            third_element,
+        )
 
-        assert shortest_path == [self.first_element, fourth_element, third_element]
+        assert shortest_path == [
+            self.first_element,
+            fourth_element,
+            third_element,
+        ]
 
     def test_shortest_distance(self):
         third_element = 'C'
@@ -49,7 +56,10 @@ class TestDeliverGraph:
 
         self.graph.populate_graph(self.mock)
 
-        shortest_distance = self.graph.shortest_distance(self.first_element, third_element)
+        shortest_distance = self.graph.shortest_distance(
+            self.first_element,
+            third_element,
+        )
         total_distance = self.weight + fourth_third_weight
 
         assert shortest_distance == total_distance
