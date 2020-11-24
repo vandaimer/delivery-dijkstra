@@ -161,3 +161,31 @@ class TestRoute:
         spy_map.assert_called_once_with(map)
         spy_origin.assert_called_once_with(map, self.mock_data['origin'])
         spy_destination.assert_called_once_with(map, self.mock_data['destination'])
+
+    def test_cheapest(self, mocker):
+        mocker.patch('delivery.views.route.Route.validate_cheapest_input')
+        mocker.patch('delivery.views.route.Route.calculate_expenses')
+        expected = RouteModel(**self.mock_data)
+
+        input = {}
+        input.update(self.mock_data)
+        input['gas_price'] = 1
+        input['truck_autonomy'] = 1
+
+        session = UnifiedAlchemyMagicMock(data=[
+            (
+                [mock.call.query(RouteModel),
+                 mock.call.filter(RouteModel.map == self.mock_data['map']),],
+                [expected]
+            ),
+        ])
+
+        route = Route(session)
+
+        result = route.cheapest(input)
+
+        route.calculate_expenses.assert_called_once()
+
+        assert list(result.keys()) == ['route', 'cost']
+        assert self.mock_data['origin'] in list(result['route'])
+        assert self.mock_data['destination'] in list(result['route'])
