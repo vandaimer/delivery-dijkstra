@@ -130,3 +130,14 @@ class TestRoute:
 
         with pytest.raises(ValueError, match='This destination on this map does not exists.'):
             route.validate_destination(self.mock_data['map'], self.mock_data['destination'])
+
+    def test_calculate_cost(self):
+        gas_price = 1
+        truck_autonomy = 1
+        distance = 0
+
+        expected = 0
+
+        result = Route.calculate_expenses(gas_price, truck_autonomy, distance)
+
+        assert result == expected
