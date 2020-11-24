@@ -27,9 +27,11 @@ def healthcheck(db: Session = Depends(async_session)):
 
 @router.post("/route", status_code=201, response_model=RouteSchema,
              tags=["Routes"])
-def new_route(route: RouteSchema, db: Session = Depends(async_session)):
+def new_route(input: RouteSchema, db: Session = Depends(async_session)):
+    route = Route(db)
+
     try:
-        new_route = Route.create(route, db)
+        new_route = route.create(input)
         return new_route
     except ValueError as e:
         logger.error(e)
@@ -53,6 +55,9 @@ def new_route(route: RouteSchema, db: Session = Depends(async_session)):
 def route_cheapest(map: str, origin: str, destination: str,
                    truck_autonomy: float, gas_price: float,
                    db: Session = Depends(async_session)):
+
+    route = Route(db)
+
     try:
         data_input = {
             'map': map,
@@ -62,7 +67,7 @@ def route_cheapest(map: str, origin: str, destination: str,
             'gas_price': gas_price
         }
 
-        data = Route.cheapest(data_input, db)
+        data = route.cheapest(data_input)
         return RouteCheapestSchema(**data)
 
     except ValueError as e:
