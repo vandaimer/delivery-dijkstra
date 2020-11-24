@@ -21,6 +21,17 @@ services:
     depends_on:
       - db
 
+  tests:
+    build: .
+    command: pytest -vv
+    volumes:
+      - .:/app
+
+  coverage:
+    build: .
+    command: pytest --cov-report html --cov=.
+    volumes:
+      - .:/app
 
   flake8:
     build: .
