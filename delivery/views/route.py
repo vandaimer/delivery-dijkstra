@@ -20,13 +20,27 @@ class Route:
     def cheapest(data, db):
 
         routes = db.query(RouteModel).filter_by(map=data['map']).all()
-        routes = [(route.origin, route.destination, route.distance) for route in routes]
+        routes = [
+            (route.origin, route.destination, route.distance)
+            for route in routes
+        ]
 
         graph = DeliveryGraph(routes)
-        shortest_distance = graph.shortest_distance(data['origin'], data['destination'])
-        shortest_path = graph.shortest_path(data['origin'], data['destination'])
 
-        cost = Route.calculate_expenses(data['gas_price'], data['truck_autonomy'], shortest_distance)
+        shortest_distance = graph.shortest_distance(
+            data['origin'],
+            data['destination'],
+        )
+        shortest_path = graph.shortest_path(
+            data['origin'],
+            data['destination'],
+        )
+
+        cost = Route.calculate_expenses(
+            data['gas_price'],
+            data['truck_autonomy'],
+            shortest_distance,
+        )
 
         return {
             'route': shortest_path,

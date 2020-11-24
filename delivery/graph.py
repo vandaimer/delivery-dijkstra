@@ -5,7 +5,8 @@ class DeliveryGraph:
     """Graph lib wrapper
 
     Parameters
-    data (list(tuple)): The data should be a list of tuple. Each tuple should have 3 values.
+    data (list(tuple)): The data should be a list of tuple.
+    Each tuple should have 3 values.
     The first value should be the node A
     The second value should be the node B
     The last value should be the weight between node A and node B

@@ -2,7 +2,6 @@ import logging
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from sqlalchemy.orm.exc import NoResultFound
 
 from db import async_session
 from delivery.views import Healthcheck, Route
@@ -26,7 +25,8 @@ def healthcheck(db: Session = Depends(async_session)):
         )
 
 
-@router.post("/route", status_code=201, response_model=RouteSchema, tags=["Routes"])
+@router.post("/route", status_code=201, response_model=RouteSchema,
+             tags=["Routes"])
 def new_route(route: RouteSchema, db: Session = Depends(async_session)):
     try:
         new_route = Route.create(route, db)
@@ -46,10 +46,13 @@ def new_route(route: RouteSchema, db: Session = Depends(async_session)):
 
 
 @router.get(
-    "/route/cheapest/map/{map}/origin/{origin}/destination/{destination}/truck_autonomy/{truck_autonomy}/gas_price/{gas_price}",
+    "/route/cheapest/map/{map}/origin/{origin}/destination/{destination}"
+    "/truck_autonomy/{truck_autonomy}/gas_price/{gas_price}",
     response_model=RouteCheapestSchema,
     status_code=200, tags=["Routes"])
-def new_route(map: str, origin: str, destination: str, truck_autonomy: float, gas_price: float, db: Session = Depends(async_session)):
+def route_cheapest(map: str, origin: str, destination: str,
+                   truck_autonomy: float, gas_price: float,
+                   db: Session = Depends(async_session)):
     try:
         data_input = {
             'map': map,
