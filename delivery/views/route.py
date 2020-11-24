@@ -1,4 +1,5 @@
 from delivery.models import Route as RouteModel
+from delivery.graph import DeliveryGraph
 
 
 class Route:
@@ -14,6 +15,23 @@ class Route:
         db.commit()
 
         return route
+
+    @staticmethod
+    def cheapest(data, db):
+
+        routes = db.query(RouteModel).filter_by(map=data['map']).all()
+        routes = [(route.origin, route.destination, route.distance) for route in routes]
+
+        graph = DeliveryGraph(routes)
+        shortest_distance = graph.shortest_distance(data['origin'], data['destination'])
+        shortest_path = graph.shortest_path(data['origin'], data['destination'])
+
+        cost = Route.calculate_expenses(data['gas_price'], data['truck_autonomy'], shortest_distance)
+
+        return {
+            'route': shortest_path,
+            'cost': cost,
+        }
 
     @staticmethod
     def calculate_expenses(gas_price, truck_autonomy, distance):
