@@ -16,6 +16,10 @@ class Route:
         return route
 
     @staticmethod
+    def calculate_expenses(gas_price, truck_autonomy, distance):
+        return (distance/truck_autonomy) * gas_price
+
+    @staticmethod
     def validate_input(route, db):
         unique_route = route.dict()
         del unique_route['distance']
