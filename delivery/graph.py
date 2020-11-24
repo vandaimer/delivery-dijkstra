@@ -15,11 +15,10 @@ class DeliveryGraph:
         data = [('NodeA', 'Node B', 10.5)]
 
     """
-    def __init__(self, data):
+    def __init__(self):
         self.graph = Graph()
-        self._populate_graph(data)
 
-    def _populate_graph(self, data):
+    def populate_graph(self, data):
         for item in data:
             self.graph.add_edge(item[0], item[1], item[2])
 

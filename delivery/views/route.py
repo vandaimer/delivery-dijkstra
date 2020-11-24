@@ -27,7 +27,8 @@ class Route:
             for route in routes
         ]
 
-        graph = DeliveryGraph(routes)
+        graph = DeliveryGraph()
+        graph.populate_graph(routes)
 
         origin = data['origin']
         destination = data['destination']
