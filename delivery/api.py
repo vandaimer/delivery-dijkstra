@@ -6,7 +6,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from db import async_session
 from delivery.views import Healthcheck, Route
-from delivery.schemas import RouteSchema
+from delivery.schemas import RouteSchema, RouteCheapestSchema
 
 
 router = APIRouter()
@@ -42,4 +42,35 @@ def new_route(route: RouteSchema, db: Session = Depends(async_session)):
         raise HTTPException(
             status_code=400,
             detail="Error to create a new route.",
+        )
+
+
+@router.get(
+    "/route/cheapest/map/{map}/origin/{origin}/destination/{destination}/truck_autonomy/{truck_autonomy}/gas_price/{gas_price}",
+    response_model=RouteCheapestSchema,
+    status_code=200, tags=["Routes"])
+def new_route(map: str, origin: str, destination: str, truck_autonomy: float, gas_price: float, db: Session = Depends(async_session)):
+    try:
+        data_input = {
+            'map': map,
+            'origin': origin,
+            'destination': destination,
+            'truck_autonomy': truck_autonomy,
+            'gas_price': gas_price
+        }
+
+        data = Route.cheapest(data_input, db)
+        return RouteCheapestSchema(**data)
+
+    except ValueError as e:
+        logger.error(e)
+        raise HTTPException(
+            status_code=400,
+            detail=str(e),
+        )
+    except Exception as e:
+        logger.error(e)
+        raise HTTPException(
+            status_code=400,
+            detail="Error to retrive the cheapest route.",
         )
