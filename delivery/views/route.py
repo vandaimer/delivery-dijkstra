@@ -72,14 +72,12 @@ class Route:
             raise ValueError('This destination on this map does not exists.')
 
     def validate_origin(self, map, origin):
-        exists = self.db.query(
-            self.db.query(RouteModel).filter_by(
-                map=map,
-                origin=origin,
-            ).exists(),
-        ).scalar()
+        routes = self.db.query(RouteModel.id).filter(
+            RouteModel.map == map,
+            RouteModel.origin == origin,
+        ).count()
 
-        if exists is False:
+        if routes == 0:
             raise ValueError('This origin on this map does not exists.')
 
     def validate_map(self, map):
