@@ -21,3 +21,9 @@ services:
     depends_on:
       - db
 
+
+  flake8:
+    build: .
+    command: flake8 .
+    volumes:
+      - .:/app
