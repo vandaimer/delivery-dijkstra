@@ -21,7 +21,7 @@ class Route:
     def cheapest(self, data):
         self.validate_cheapest_input(data)
 
-        routes = self.db.query(RouteModel).filter_by(map=data['map']).all()
+        routes = self.db.query(RouteModel).filter(RouteModel.map == data['map']).all()
         routes = [
             (route.origin, route.destination, route.distance)
             for route in routes
