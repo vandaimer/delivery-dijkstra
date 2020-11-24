@@ -61,7 +61,10 @@ class Route:
 
     def validate_destination(self, map, destination):
         exists = self.db.query(
-            self.db.query(RouteModel).filter_by(map=map, destination=destination).exists(),
+            self.db.query(RouteModel).filter_by(
+                map=map,
+                destination=destination,
+            ).exists(),
         ).scalar()
 
         if exists is False:
@@ -69,7 +72,10 @@ class Route:
 
     def validate_origin(self, map, origin):
         exists = self.db.query(
-            self.db.query(RouteModel).filter_by(map=map, origin=origin).exists(),
+            self.db.query(RouteModel).filter_by(
+                map=map,
+                origin=origin,
+            ).exists(),
         ).scalar()
 
         if exists is False:
