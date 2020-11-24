@@ -83,11 +83,9 @@ class Route:
             raise ValueError('This origin on this map does not exists.')
 
     def validate_map(self, map):
-        exists = self.db.query(
-            self.db.query(RouteModel).filter_by(map=map).exists(),
-        ).scalar()
+        routes = self.db.query(RouteModel.id).filter(RouteModel.map == map).count()
 
-        if exists is False:
+        if routes == 0:
             raise ValueError('This map does not exists.')
 
     def calculate_expenses(self, gas_price, truck_autonomy, distance):
