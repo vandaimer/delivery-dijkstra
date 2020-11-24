@@ -9,7 +9,7 @@ class Route:
     def create(self, route):
         valid_input = self.validate_input(route)
 
-        if valid_input:
+        if valid_input is not None:
             raise ValueError('This route already exists.')
 
         new_route = RouteModel(**route.dict())
@@ -94,9 +94,8 @@ class Route:
         return (distance/truck_autonomy) * gas_price
 
     def validate_input(self, route):
-        unique_route = route.dict()
-        del unique_route['distance']
-
-        return self.db.query(
-            self.db.query(RouteModel).filter_by(**unique_route).exists(),
-        ).scalar()
+        return self.db.query(RouteModel.id).filter(
+            RouteModel.map == route.map,
+            RouteModel.origin == route.origin,
+            RouteModel.destination == route.destination,
+        ).one_or_none()
